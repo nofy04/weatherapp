@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'weatherapp.css' %}">
+    <title>Weather App</title>
+</head>
+<body>
+
+<div id="weather-box">
+    <h1 id="title"><div id="drag" class="drag"></div>Weather App</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input id="input" type="text" name="city" placeholder="Enter city name">
+        <button id="search-btn" class="button" type="submit">Get Weather</button>
+        <button id="change-btn" class="button" type="button">Convert to Fahrenheit</button>
+    </form>
+
+
+    {% if weather %}
+    <div id="weather-display">
+            {% if weather.error %}
+                <p style="color: red;">{{ weather.error }}</p>
+            {% else %}
+                <h2 id="city">{{ weather.city }}</h2>
+                <p id="temperature">{{ weather.temperature }} °C</p>
+                <p id="description">{{ weather.description }}</p>
+                <img src="https:{{ weather.icon }}" alt="icon">
+                <div id="bg-url" data-bg="{{ weather.background }}"></div>
+            {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<div id="forecast-box">
+    <h3 id="heading"><div id="drag-forecast" class="drag"></div>5-Day Forecast</h3>
+    <div class="forecast-scroll">
+        {% if forecast %}
+            {% for day in forecast %}
+            <div class="forecast-day">
+                <p class="date">{{ day.date }}</p>
+                <img src="https:{{ day.icon }}" alt="icon">
+                <p class="temp">{{ day.min_temp }}°C - {{ day.max_temp }}°C</p>
+                <p class="desc">{{ day.description }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: aliceblue;align-self: center;">Nothing to show here</p>
+        {% endif %}
+    </div>
+</div>
+
+
+
+<p id="site-name">{{ weather.background }}</p>
+
+<script src="{% static 'weatherapp.js' %}"></script>
+</body>
+</html>
